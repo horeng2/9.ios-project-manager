@@ -10,7 +10,7 @@ import UIKit
 class TaskCell: UITableViewCell {
     let taskCellViewModel = TaskCellViewModel()
     private let cellStackView = UIStackView()
-    private let titleLable = UILabel()
+    let titleLable = UILabel()
     private let explanationLabel = UILabel()
     private let deadLineLabel = UILabel()
 
@@ -20,6 +20,8 @@ class TaskCell: UITableViewCell {
           reuseIdentifier: reuseIdentifier
         )
         contentView.addSubview(cellStackView)
+        setupCellStackView()
+        setupCellConstraints()
     }
     
     required init?(coder: NSCoder) {
@@ -30,6 +32,9 @@ class TaskCell: UITableViewCell {
         cellStackView.addArrangedSubview(titleLable)
         cellStackView.addArrangedSubview(explanationLabel)
         cellStackView.addArrangedSubview(deadLineLabel)
+        cellStackView.axis = .vertical
+        cellStackView.alignment = .fill
+        cellStackView.isLayoutMarginsRelativeArrangement = true
     }
     
     func setupCellConstraints() {

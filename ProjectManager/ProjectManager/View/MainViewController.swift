@@ -8,13 +8,10 @@ import UIKit
 
 class MainViewController: UIViewController, UITableViewDelegate {
     private let taskStackView = UIStackView()
-    private let toDoViewController = ToDoViewController()
-    private let doingViewController = DoingViewController()
-    private let doneViewController = DoneViewController()
-
-    private var toDoView: UIView!
-    private var doingView: UIView!
-    private var doneView: UIView!
+    private let toDoTableView = UITableView()
+    private let doingTableView = UITableView()
+    private let doneTableView = UITableView()
+    let dataManager = TestDataManager()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -22,6 +19,26 @@ class MainViewController: UIViewController, UITableViewDelegate {
         setupMainView()
         setupTaskStackView()
         setupConstraint()
+        toDoTableView.dataSource = self
+        toDoTableView.delegate = self
+        doingTableView.dataSource = self
+        doingTableView.delegate = self
+        doneTableView.dataSource = self
+        doneTableView.delegate = self
+        
+        toDoTableView.register(
+            TaskCell.self,
+            forCellReuseIdentifier: "TaskCell"
+        )
+        doingTableView.register(
+            TaskCell.self,
+            forCellReuseIdentifier: "TaskCell"
+        )
+        doneTableView.register(
+            TaskCell.self,
+            forCellReuseIdentifier: "TaskCell"
+        )
+        
     }
 
     private func setupNavigation() {
@@ -37,21 +54,14 @@ class MainViewController: UIViewController, UITableViewDelegate {
     }
     
     private func setupMainView() {
-        addChild(toDoViewController)
-        addChild(doingViewController)
-        addChild(doneViewController)
-
-        toDoView = toDoViewController.view
-        doingView = doingViewController.view
-        doneView = doneViewController.view
-
+    
     }
 
     private func setupTaskStackView() {
         view.addSubview(taskStackView)
-        taskStackView.addArrangedSubview(toDoView)
-        taskStackView.addArrangedSubview(doingView)
-        taskStackView.addArrangedSubview(doneView)
+        taskStackView.addArrangedSubview(toDoTableView)
+        taskStackView.addArrangedSubview(doingTableView)
+        taskStackView.addArrangedSubview(doneTableView)
 
         taskStackView.axis = .horizontal
         taskStackView.distribution = .fillEqually
@@ -71,9 +81,33 @@ class MainViewController: UIViewController, UITableViewDelegate {
     }
     
     @objc func showEditView() {
-        let editView = UINavigationController(rootViewController:  EditViewController())
+        let editView = UINavigationController(rootViewController: EditViewController())
         editView.modalPresentationStyle = .automatic
         self.present(editView, animated: true)
     }
 }
 
+extension MainViewController: UITableViewDataSource {
+    func tableView(
+        _ tableView: UITableView,
+        numberOfRowsInSection section: Int
+    ) -> Int {
+        return dataManager.dataList.count
+    }
+    
+    func tableView(
+        _ tableView: UITableView,
+        cellForRowAt indexPath: IndexPath
+    ) -> UITableViewCell {
+        guard let cell = tableView.dequeueReusableCell(
+          withIdentifier: "TaskCell",
+          for: indexPath
+        ) as? TaskCell else {
+            return UITableViewCell()
+        }
+
+        cell.configure(with: indexPath.row)
+        
+        return cell
+    }
+}

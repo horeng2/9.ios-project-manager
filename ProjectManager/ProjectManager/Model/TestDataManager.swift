@@ -8,7 +8,7 @@
 import Foundation
 
 class TestDataManager {
-    lazy var dataList: [TaskInfomation] = self.fetch()
+    lazy var dataList: [TaskInfomation] = [TaskInfomation(uuid: UUID(), title: "sdfsfs", explanation: "sfdsfs", deadline: 3423423423), TaskInfomation(uuid: UUID(), title: "sdfsfs", explanation: "sfdsfs", deadline: 3423423423)]
     
     func save(taskInfomation: TaskInfomation) {
         dataList.append(taskInfomation)

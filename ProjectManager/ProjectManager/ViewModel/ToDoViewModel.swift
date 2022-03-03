@@ -9,4 +9,8 @@ import Foundation
 
 class ToDoViewModel {
     let dataManager = TestDataManager()
+    
+    func saveData(task: TaskInfomation) {
+        dataManager.save(taskInfomation: task)
+    }
 }

@@ -8,6 +8,7 @@
 import UIKit
 
 class EditViewController: UIViewController {
+    let toDoViewModel = ToDoViewModel()
     private let editStackView = UIStackView()
     private let titleTextField = UITextField()
     private let datePicker = UIDatePicker()
@@ -36,7 +37,7 @@ class EditViewController: UIViewController {
         title: "Done",
         style: .done,
         target: self,
-        action: nil
+        action: #selector(touchUpDoneButton)
         )
         navigationItem.setLeftBarButton(leftButton, animated: false)
         navigationItem.setRightBarButton(rightButton, animated: false)
@@ -81,6 +82,21 @@ class EditViewController: UIViewController {
     }
     
     @objc func touchUpCancelButton() {
-        self.dismiss(animated: true, completion: nil)
+        self.dismiss(animated: true)
+    }
+    
+    @objc func touchUpDoneButton() {
+        let uuid = UUID()
+        let title = titleTextField.text ?? ""
+        let date = datePicker.date.timeIntervalSince1970
+        let explanation = contentTextView.text ?? ""
+        let taskInfomation = TaskInfomation(
+            uuid: uuid,
+            title: title,
+            explanation: explanation,
+            deadline: date
+        )
+        toDoViewModel.saveData(task: taskInfomation)
+        self.dismiss(animated: true)
     }
 }
