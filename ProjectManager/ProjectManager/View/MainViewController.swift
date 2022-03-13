@@ -100,57 +100,47 @@ class MainViewController: UIViewController, UITableViewDelegate {
     private func setupLongPressRecognizer(cell: TaskCell) {
         let longPressRecognizer = UILongPressGestureRecognizer(
             target: self,
-            action: #selector(longPress(sender:))
+            action: #selector(setupPopover(sender:))
         )
         cell.addGestureRecognizer(longPressRecognizer)
     }
     
-    @objc private func longPress(sender: UILongPressGestureRecognizer) {
-        guard let tableView = sender.view?.superview as? UITableView,
-                let cell = sender.view as? TaskCell else {
-                    return
-                }
+    @objc private func setupPopover(sender: UILongPressGestureRecognizer) {
         if sender.state == UIGestureRecognizer.State.began {
-            let touchPoint = sender.location(in: tableView)
-            guard let indexPath = tableView.indexPathForRow(at: touchPoint) else {
-                return
-            }
-            setupPopover(
-                cell: cell, indexPath: indexPath)
+            guard let cell = sender.view as? TaskCell,
+                  let position = cell.position,
+                  let indexPath = cell.getIndexPath() else {
+                        return
+                    }
+            
+            let popoverList = ToDoPosition.allCases.filter{ $0 != position }
+            guard let firstSelect = popoverList.first,
+                  let secondSelect = popoverList.last else {
+                      return
+                  }
+            
+            self.showPopover(
+                cell: cell,
+                firstSelectTitle: firstSelect.moveButtonName,
+                secondSelectTitle: secondSelect.moveButtonName
+            ) { _ in
+                self.todoViewModel.changePosition(
+                    from: position,
+                    to: firstSelect,
+                    currentIndexPath: indexPath.row
+            )} secoundHandler: { _ in
+                self.todoViewModel.changePosition(
+                    from: position,
+                    to: secondSelect,
+                    currentIndexPath: indexPath.row
+            )}
         }
     }
     
-    private func setupPopover(
-        cell: TaskCell,
-        indexPath: IndexPath
-    ) {
-        guard let position = cell.position else {
-                  return
-              }
-        
-        let popoverList = ToDoPosition.allCases.filter{ $0 != position }
-        guard let firstSelect = popoverList.first,
-              let secondSelect = popoverList.last else {
-                  return
-              }
-        
-        self.showPopover(firstSelectTitle: firstSelect.moveButtonName, secondSelectTitle: secondSelect.moveButtonName, cell: cell) { _ in
-            self.todoViewModel.changePosition(
-                from: position,
-                to: firstSelect,
-                currentIndexPath: indexPath.row
-        )} secoundHandler: { _ in
-            self.todoViewModel.changePosition(
-                from: position,
-                to: secondSelect,
-                currentIndexPath: indexPath.row
-        )}
-    }
-    
     private func showPopover(
+        cell: TaskCell,
         firstSelectTitle: String,
         secondSelectTitle: String,
-        cell: TaskCell,
         firstHandler: @escaping (UIAlertAction) -> Void,
         secoundHandler: @escaping (UIAlertAction) -> Void
     ) {

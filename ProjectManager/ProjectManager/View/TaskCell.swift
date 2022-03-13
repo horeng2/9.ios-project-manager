@@ -77,4 +77,10 @@ class TaskCell: UITableViewCell {
             deadLineLabel.textColor = .red
         }
     }
+    
+    func getIndexPath() -> IndexPath? {
+        let superView = self.superview as? UITableView
+        let indexPath = superView?.indexPath(for: self)
+        return indexPath
+    }
 }
