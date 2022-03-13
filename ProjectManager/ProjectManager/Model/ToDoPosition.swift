@@ -7,8 +7,12 @@
 
 import Foundation
 
-enum ToDoPosition {
+enum ToDoPosition: CaseIterable {
     case ToDo
     case Doing
     case Done
+    
+    var moveButtonName: String {
+        return "Move to \(self)"
+    }
 }

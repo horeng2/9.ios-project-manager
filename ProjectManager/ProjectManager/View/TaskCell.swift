@@ -9,9 +9,11 @@ import UIKit
 
 class TaskCell: UITableViewCell {
     private let cellStackView = UIStackView()
-    private let titleLable = UILabel()
+    var position: ToDoPosition? = nil
+    private let titleLabel = UILabel()
     private let discriptionLabel = UILabel()
     private let deadLineLabel = UILabel()
+
 
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(
@@ -29,7 +31,7 @@ class TaskCell: UITableViewCell {
     
     private func setupCellStackView() {
         contentView.addSubview(cellStackView)
-        cellStackView.addArrangedSubview(titleLable)
+        cellStackView.addArrangedSubview(titleLabel)
         cellStackView.addArrangedSubview(discriptionLabel)
         cellStackView.addArrangedSubview(deadLineLabel)
         cellStackView.axis = .vertical
@@ -60,14 +62,15 @@ class TaskCell: UITableViewCell {
     }
     
     private func setupCellContent() {
-        titleLable.font = .preferredFont(forTextStyle: .headline)
+        titleLabel.font = .preferredFont(forTextStyle: .headline)
         discriptionLabel.font = .preferredFont(forTextStyle: .body)
         discriptionLabel.textColor = .gray
         discriptionLabel.numberOfLines = 3
     }
     
     func configure(with todo: ToDoInfomation) {
-        titleLable.text = todo.title
+        position = todo.position
+        titleLabel.text = todo.title
         discriptionLabel.text = todo.discription
         deadLineLabel.text = todo.localizedDateString
         if todo.position != .Done && todo.deadline < Date().timeIntervalSince1970 {

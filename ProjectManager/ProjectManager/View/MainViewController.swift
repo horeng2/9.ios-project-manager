@@ -5,6 +5,7 @@
 //
 
 import UIKit
+import SwiftUI
 
 class MainViewController: UIViewController, UITableViewDelegate {
     private var todoViewModel = ToDoViewModel()
@@ -12,14 +13,13 @@ class MainViewController: UIViewController, UITableViewDelegate {
     private let toDoTableView = UITableView()
     private let doingTableView = UITableView()
     private let doneTableView = UITableView()
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
         setupNavigation()
         setupTaskStackView()
         setupConstraint()
         setupTableView()
-        setupLongPressRecognizer()
         todoViewModel.todoOnUpdated = { [weak self] in
             self?.toDoTableView.reloadData()
             self?.doingTableView.reloadData()
@@ -88,14 +88,7 @@ class MainViewController: UIViewController, UITableViewDelegate {
             taskStackView.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor)
         ])
     }
-    private func setupLongPressRecognizer() {
-        let longPressRecognizer = UILongPressGestureRecognizer(
-            target: self,
-            action: #selector(longPress(sender:))
-        )
-        self.view.addGestureRecognizer(longPressRecognizer)
-    }
-    
+
     @objc private func showEditView() {
         let editView = EditViewController()
         editView.delegate = self
@@ -104,81 +97,60 @@ class MainViewController: UIViewController, UITableViewDelegate {
         self.present(modalView, animated: true)
     }
     
+    private func setupLongPressRecognizer(cell: TaskCell) {
+        let longPressRecognizer = UILongPressGestureRecognizer(
+            target: self,
+            action: #selector(longPress(sender:))
+        )
+        cell.addGestureRecognizer(longPressRecognizer)
+    }
+    
     @objc private func longPress(sender: UILongPressGestureRecognizer) {
+        guard let tableView = sender.view?.superview as? UITableView,
+                let cell = sender.view as? TaskCell else {
+                    return
+                }
         if sender.state == UIGestureRecognizer.State.began {
-            let touchPoint = sender.location(in: self.taskStackView)
-            let sectionSize = self.taskStackView.frame.width / 3
-            if touchPoint.x < sectionSize {
-                self.setupPopover(
-                    tableView: toDoTableView,
-                    touchYPoint: sender.location(in: toDoTableView)
-                )
-            } else if touchPoint.x < sectionSize * 2 {
-                self.setupPopover(
-                    tableView: doingTableView,
-                    touchYPoint: sender.location(in: doingTableView)
-                )
-            } else {
-                self.setupPopover(
-                    tableView: doneTableView,
-                    touchYPoint: sender.location(in: doneTableView)
-                )
+            let touchPoint = sender.location(in: tableView)
+            guard let indexPath = tableView.indexPathForRow(at: touchPoint) else {
+                return
             }
+            setupPopover(
+                cell: cell, indexPath: indexPath)
         }
     }
     
     private func setupPopover(
-        tableView: UITableView,
-        touchYPoint: CGPoint
+        cell: TaskCell,
+        indexPath: IndexPath
     ) {
-        let beforePosition: ToDoPosition
-        let firstSelect: (String, ToDoPosition)
-        let secondSelect: (String, ToDoPosition)
-        guard let selectedIndexPath = tableView.indexPathForRow(at: touchYPoint) else {
-            return
-        }
+        guard let position = cell.position else {
+                  return
+              }
         
-        switch tableView {
-        case toDoTableView:
-            beforePosition = .ToDo
-            firstSelect = ("Move to DOING", .Doing)
-            secondSelect = ("Move to DONE", .Done)
-        case doingTableView:
-            beforePosition = .Doing
-            firstSelect = ("Move to DONE", .Done)
-            secondSelect = ("Move to TODO", .ToDo)
-        case doneTableView:
-            beforePosition = .Done
-            firstSelect = ("Move to TODO", .ToDo)
-            secondSelect = ("Move to DOING", .Doing)
-        default: return
-        }
+        let popoverList = ToDoPosition.allCases.filter{ $0 != position }
+        guard let firstSelect = popoverList.first,
+              let secondSelect = popoverList.last else {
+                  return
+              }
         
-        self.showPopover(
-            firstSelectTitle: firstSelect.0,
-            secondSelectTitle: secondSelect.0,
-            tableView: tableView,
-            indexPath: selectedIndexPath
-        ) { _ in
+        self.showPopover(firstSelectTitle: firstSelect.moveButtonName, secondSelectTitle: secondSelect.moveButtonName, cell: cell) { _ in
             self.todoViewModel.changePosition(
-                from: beforePosition,
-                to: firstSelect.1,
-                currentIndexPath: selectedIndexPath.row
-            )
-        } secoundHandler: { _ in
+                from: position,
+                to: firstSelect,
+                currentIndexPath: indexPath.row
+        )} secoundHandler: { _ in
             self.todoViewModel.changePosition(
-                from: beforePosition,
-                to: secondSelect.1,
-                currentIndexPath: selectedIndexPath.row
-            )
-        }
+                from: position,
+                to: secondSelect,
+                currentIndexPath: indexPath.row
+        )}
     }
     
     private func showPopover(
         firstSelectTitle: String,
         secondSelectTitle: String,
-        tableView: UITableView,
-        indexPath: IndexPath,
+        cell: TaskCell,
         firstHandler: @escaping (UIAlertAction) -> Void,
         secoundHandler: @escaping (UIAlertAction) -> Void
     ) {
@@ -199,11 +171,7 @@ class MainViewController: UIViewController, UITableViewDelegate {
         )
         
         let popover = alert.popoverPresentationController
-        popover?.sourceView = tableView
-        
-        let rowRect = tableView.rectForRow(at: indexPath)
-        let rowCenterRect = rowRect.offsetBy(dx: 0, dy: -rowRect.height/2)
-        popover?.sourceRect = rowCenterRect
+        popover?.sourceView = cell
         
         alert.addAction(firstAction)
         alert.addAction(secondAction)
@@ -243,7 +211,6 @@ extension MainViewController: UITableViewDataSource {
         } else {
             cellIdentifier = "DoneCell"
         }
-        
         guard let cell = tableView.dequeueReusableCell(
             withIdentifier: cellIdentifier,
             for: indexPath
@@ -253,6 +220,9 @@ extension MainViewController: UITableViewDataSource {
         
         let todo = todoViewModel.todos[indexPath.row]
         cell.configure(with: todo)
+        
+        setupLongPressRecognizer(cell: cell)
+        
         return cell
     }
     
