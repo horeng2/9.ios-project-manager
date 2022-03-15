@@ -92,6 +92,9 @@ class EditViewController: UIViewController {
     }
     
     @objc private func touchUpDoneButton() {
+        if titleTextField.text == "" {
+            return
+        }
         var saveToDo = ToDoInfomation(
             id: UUID(),
             title: titleTextField.text ?? "",

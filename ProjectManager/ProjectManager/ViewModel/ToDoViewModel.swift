@@ -14,8 +14,8 @@ class ToDoViewModel {
     var todos = [ToDoInfomation]() {
         didSet {
             todos = todos.sorted { $0.deadline > $1.deadline }
-            todoOnUpdated()
             updateTaskCount()
+            todoOnUpdated()
         }
     }
         

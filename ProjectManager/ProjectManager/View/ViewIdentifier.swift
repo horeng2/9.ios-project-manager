@@ -12,7 +12,7 @@ struct ViewIdentifier {
     static let doingHeaderId = "doingHeader"
     static let doneHeaderId = "doneHeader"
     
-    static let todoCellId = "todoHeader"
-    static let doingCellId = "doingHeader"
-    static let doneCellId = "doneHeader"
+    static let todoCellId = "todoCell"
+    static let doingCellId = "doingCell"
+    static let doneCellId = "doneCell"
 }
