@@ -16,6 +16,8 @@
 		48068F7D27CDE8E7004CB686 /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = 48068F7C27CDE8E7004CB686 /* FirebaseAuth */; };
 		48068F8527CDE8E7004CB686 /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = 48068F8427CDE8E7004CB686 /* FirebaseFirestore */; };
 		48068F9327CDE8E7004CB686 /* FirebaseStorage in Frameworks */ = {isa = PBXBuildFile; productRef = 48068F9227CDE8E7004CB686 /* FirebaseStorage */; };
+		4831277327DF265E0000DF6D /* TaskTableViewHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4831277227DF265E0000DF6D /* TaskTableViewHeader.swift */; };
+		4874718C27E08A47005F63E8 /* taskTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4874718B27E08A47005F63E8 /* taskTableView.swift */; };
 		489A3CEE27CF858A005BABD4 /* ToDoInfomation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 489A3CED27CF858A005BABD4 /* ToDoInfomation.swift */; };
 		489A3CF527CF8A97005BABD4 /* DateFomatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 489A3CF427CF8A97005BABD4 /* DateFomatter.swift */; };
 		489A3CFD27CFBAA0005BABD4 /* TestDataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 489A3CFC27CFBAA0005BABD4 /* TestDataManager.swift */; };
@@ -33,6 +35,8 @@
 
 /* Begin PBXFileReference section */
 		48068F7327CDDBA8004CB686 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "../../../../../Downloads/GoogleService-Info.plist"; sourceTree = "<group>"; };
+		4831277227DF265E0000DF6D /* TaskTableViewHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskTableViewHeader.swift; sourceTree = "<group>"; };
+		4874718B27E08A47005F63E8 /* taskTableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = taskTableView.swift; sourceTree = "<group>"; };
 		489A3CED27CF858A005BABD4 /* ToDoInfomation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToDoInfomation.swift; sourceTree = "<group>"; };
 		489A3CF427CF8A97005BABD4 /* DateFomatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateFomatter.swift; sourceTree = "<group>"; };
 		489A3CFC27CFBAA0005BABD4 /* TestDataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestDataManager.swift; sourceTree = "<group>"; };
@@ -91,6 +95,8 @@
 			children = (
 				C7431F0925F51E1D0094C4CF /* MainViewController.swift */,
 				489A3D0A27D0ADBD005BABD4 /* EditViewController.swift */,
+				4831277227DF265E0000DF6D /* TaskTableViewHeader.swift */,
+				4874718B27E08A47005F63E8 /* taskTableView.swift */,
 				489A3D0427D093A0005BABD4 /* TaskCell.swift */,
 			);
 			path = View;
@@ -247,9 +253,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4831277327DF265E0000DF6D /* TaskTableViewHeader.swift in Sources */,
 				489A3D1127D1D2E8005BABD4 /* ToDoPosition.swift in Sources */,
 				C7431F0A25F51E1D0094C4CF /* MainViewController.swift in Sources */,
 				489A3CFD27CFBAA0005BABD4 /* TestDataManager.swift in Sources */,
+				4874718C27E08A47005F63E8 /* taskTableView.swift in Sources */,
 				489A3CEE27CF858A005BABD4 /* ToDoInfomation.swift in Sources */,
 				489A3D1427D1D474005BABD4 /* ToDoRepository.swift in Sources */,
 				489A3D0F27D11FC6005BABD4 /* ToDoViewModel.swift in Sources */,

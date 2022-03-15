@@ -12,6 +12,9 @@ enum ToDoPosition: CaseIterable {
     case Doing
     case Done
     
+    var name: String {
+        return "\(self)"
+    }
     var moveButtonName: String {
         return "Move to \(self)"
     }

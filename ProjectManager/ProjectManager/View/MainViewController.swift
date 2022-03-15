@@ -5,20 +5,20 @@
 //
 
 import UIKit
-import SwiftUI
 
-class MainViewController: UIViewController, UITableViewDelegate {
+class MainViewController: UIViewController {
     private var todoViewModel = ToDoViewModel()
     private let taskStackView = UIStackView()
-    private let toDoTableView = UITableView()
-    private let doingTableView = UITableView()
-    private let doneTableView = UITableView()
+    private let toDoTableView = TaskTableView(position: .ToDo)
+    private let doingTableView = TaskTableView(position: .Doing)
+    private let doneTableView = TaskTableView(position: .Done)
 
     override func viewDidLoad() {
         super.viewDidLoad()
         setupNavigation()
         setupTaskStackView()
         setupConstraint()
+        tableViewRegister()
         setupTableView()
         todoViewModel.todoOnUpdated = { [weak self] in
             self?.toDoTableView.reloadData()
@@ -50,17 +50,32 @@ class MainViewController: UIViewController, UITableViewDelegate {
         toDoTableView.delegate = self
         doingTableView.delegate = self
         doneTableView.delegate = self
+    }
+    
+    private func tableViewRegister() {
         toDoTableView.register(
             TaskCell.self,
             forCellReuseIdentifier: "TodoCell"
+        )
+        toDoTableView.register(
+            TaskTableViewHeader.self,
+            forHeaderFooterViewReuseIdentifier: "todoHeader"
         )
         doingTableView.register(
             TaskCell.self,
             forCellReuseIdentifier: "DoingCell"
         )
+        doingTableView.register(
+            TaskTableViewHeader.self,
+            forHeaderFooterViewReuseIdentifier: "doingHeader"
+        )
         doneTableView.register(
             TaskCell.self,
             forCellReuseIdentifier: "DoneCell"
+        )
+        doneTableView.register(
+            TaskTableViewHeader.self,
+            forHeaderFooterViewReuseIdentifier: "doneHeader"
         )
         toDoTableView.backgroundColor = .systemGray6
         doingTableView.backgroundColor = .systemGray6
@@ -172,6 +187,38 @@ class MainViewController: UIViewController, UITableViewDelegate {
 extension MainViewController: EditViewDelegate {
     func editViewDidDismiss(todo: ToDoInfomation) {
         todoViewModel.save(with: todo)
+    }
+}
+
+extension MainViewController: UITableViewDelegate {
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return UITableView.automaticDimension
+    }
+    
+    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        return 50
+    }
+    
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        guard let tableViewPosition = (tableView as? TaskTableView)?.position else {
+            return UIView()
+        }
+        let taskCount = todoViewModel.todos.filter{ $0.position == tableViewPosition}.count
+        let headerId: String
+        switch tableViewPosition {
+        case .ToDo:
+            headerId = "todoHeader"
+        case .Doing:
+            headerId = "doingHeader"
+        case .Done:
+            headerId = "doneHeader"
+        }
+        guard let headerView = tableView.dequeueReusableHeaderFooterView(withIdentifier: headerId) as? TaskTableViewHeader else {
+            return UIView()
+        }
+        headerView.configure(title: tableViewPosition.name, count: taskCount)
+        return headerView
+        
     }
 }
 
