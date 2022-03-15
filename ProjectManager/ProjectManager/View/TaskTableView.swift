@@ -8,11 +8,15 @@
 import UIKit
 
 class TaskTableView: UITableView {
-    var position: ToDoPosition?
+    var position: ToDoPosition
     
     init(position: ToDoPosition) {
-        super.init(frame: .zero, style: .plain)
         self.position = position
+        super.init(frame: .zero, style: .plain)
+    }
+    
+    convenience init() {
+        self.init()
     }
     
     required init?(coder: NSCoder) {

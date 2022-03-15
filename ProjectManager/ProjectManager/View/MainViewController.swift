@@ -50,36 +50,37 @@ class MainViewController: UIViewController {
         toDoTableView.delegate = self
         doingTableView.delegate = self
         doneTableView.delegate = self
+        toDoTableView.backgroundColor = .systemGray6
+        doingTableView.backgroundColor = .systemGray6
+        doneTableView.backgroundColor = .systemGray6
     }
     
     private func tableViewRegister() {
         toDoTableView.register(
-            TaskCell.self,
-            forCellReuseIdentifier: "TodoCell"
+            TaskTableViewHeader.self,
+            forHeaderFooterViewReuseIdentifier: ViewIdentifier.todoHeaderId
         )
+        doingTableView.register(
+            TaskTableViewHeader.self,
+            forHeaderFooterViewReuseIdentifier: ViewIdentifier.doingHeaderId
+        )
+        doneTableView.register(
+            TaskTableViewHeader.self,
+            forHeaderFooterViewReuseIdentifier: ViewIdentifier.doneHeaderId
+        )
+        
         toDoTableView.register(
-            TaskTableViewHeader.self,
-            forHeaderFooterViewReuseIdentifier: "todoHeader"
+            TaskCell.self,
+            forCellReuseIdentifier: ViewIdentifier.todoCellId
         )
         doingTableView.register(
             TaskCell.self,
-            forCellReuseIdentifier: "DoingCell"
-        )
-        doingTableView.register(
-            TaskTableViewHeader.self,
-            forHeaderFooterViewReuseIdentifier: "doingHeader"
+            forCellReuseIdentifier: ViewIdentifier.doingCellId
         )
         doneTableView.register(
             TaskCell.self,
-            forCellReuseIdentifier: "DoneCell"
+            forCellReuseIdentifier: ViewIdentifier.doneCellId
         )
-        doneTableView.register(
-            TaskTableViewHeader.self,
-            forHeaderFooterViewReuseIdentifier: "doneHeader"
-        )
-        toDoTableView.backgroundColor = .systemGray6
-        doingTableView.backgroundColor = .systemGray6
-        doneTableView.backgroundColor = .systemGray6
     }
     
     private func setupTaskStackView() {
@@ -200,25 +201,23 @@ extension MainViewController: UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        guard let tableViewPosition = (tableView as? TaskTableView)?.position else {
-            return UIView()
-        }
+        let tableViewPosition = tableView.asTaskTableView().position
         let taskCount = todoViewModel.todos.filter{ $0.position == tableViewPosition}.count
         let headerId: String
+        
         switch tableViewPosition {
         case .ToDo:
-            headerId = "todoHeader"
+            headerId = ViewIdentifier.todoHeaderId
         case .Doing:
-            headerId = "doingHeader"
+            headerId = ViewIdentifier.doingHeaderId
         case .Done:
-            headerId = "doneHeader"
+            headerId = ViewIdentifier.doneHeaderId
         }
         guard let headerView = tableView.dequeueReusableHeaderFooterView(withIdentifier: headerId) as? TaskTableViewHeader else {
             return UIView()
         }
         headerView.configure(title: tableViewPosition.name, count: taskCount)
         return headerView
-        
     }
 }
 
@@ -227,13 +226,8 @@ extension MainViewController: UITableViewDataSource {
         _ tableView: UITableView,
         numberOfRowsInSection section: Int
     ) -> Int {
-        if tableView == toDoTableView {
-            return todoViewModel.todos.filter { $0.position == .ToDo }.count
-        } else if tableView == doingTableView {
-            return todoViewModel.todos.filter { $0.position == .Doing }.count
-        } else {
-            return todoViewModel.todos.filter { $0.position == .Done }.count
-        }
+        let tableViewPosition = tableView.asTaskTableView().position
+        return todoViewModel.taskCount[tableViewPosition] ?? .zero
     }
     
     func tableView(
@@ -241,12 +235,14 @@ extension MainViewController: UITableViewDataSource {
         cellForRowAt indexPath: IndexPath
     ) -> UITableViewCell {
         let cellIdentifier: String
-        if tableView == toDoTableView {
-            cellIdentifier = "TodoCell"
-        } else if tableView == doingTableView {
-            cellIdentifier = "DoingCell"
-        } else {
-            cellIdentifier = "DoneCell"
+        
+        switch tableView.asTaskTableView().position {
+        case .ToDo:
+            cellIdentifier = ViewIdentifier.todoCellId
+        case .Doing:
+            cellIdentifier = ViewIdentifier.doingCellId
+        case .Done:
+            cellIdentifier = ViewIdentifier.doneCellId
         }
         guard let cell = tableView.dequeueReusableCell(
             withIdentifier: cellIdentifier,
@@ -296,5 +292,14 @@ extension MainViewController: UITableViewDataSource {
         delete.image = UIImage(systemName: "trash")
         
         return UISwipeActionsConfiguration(actions: [delete])
+    }
+}
+
+extension UITableView {
+    func asTaskTableView() -> TaskTableView {
+        guard let taskTableView = self as? TaskTableView else {
+            return TaskTableView()
+        }
+        return taskTableView
     }
 }
