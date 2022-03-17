@@ -147,13 +147,11 @@ class MainViewController: UIViewController {
                   let indexPath = cell.getIndexPath() else {
                         return
                     }
-            
             let popoverList = ToDoPosition.allCases.filter{ $0 != position }
             guard let firstSelect = popoverList.first,
                   let secondSelect = popoverList.last else {
                       return
                   }
-            
             self.showPopover(
                 cell: cell,
                 firstSelectTitle: firstSelect.moveButtonName,
@@ -269,12 +267,10 @@ extension MainViewController: UITableViewDataSource {
         ) as? TaskCell else {
             return UITableViewCell()
         }
-        
+        setupLongPressRecognizer(cell: cell)
+
         let todo = todoViewModel.todos[indexPath.row]
         cell.configure(with: todo)
-        
-        setupLongPressRecognizer(cell: cell)
-        
         return cell
     }
     

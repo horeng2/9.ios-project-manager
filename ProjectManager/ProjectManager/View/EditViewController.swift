@@ -63,10 +63,22 @@ class EditViewController: UIViewController {
         let safeArea = view.safeAreaLayoutGuide
         editStackView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            editStackView.topAnchor.constraint(equalTo: safeArea.topAnchor, constant: 10),
-            editStackView.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor, constant: -10),
-            editStackView.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: 10),
-            editStackView.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -10)
+            editStackView.topAnchor.constraint(
+                equalTo: safeArea.topAnchor,
+                constant: 10
+            ),
+            editStackView.bottomAnchor.constraint(
+                equalTo: safeArea.bottomAnchor,
+                constant: -10
+            ),
+            editStackView.leadingAnchor.constraint(
+                equalTo: safeArea.leadingAnchor,
+                constant: 10
+            ),
+            editStackView.trailingAnchor.constraint(
+                equalTo: safeArea.trailingAnchor,
+                constant: -10
+            )
         ])
     }
     

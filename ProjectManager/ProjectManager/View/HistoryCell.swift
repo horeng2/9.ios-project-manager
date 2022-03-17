@@ -14,7 +14,10 @@ class HistoryCell: UITableViewCell {
     let beforPositionLabel = UILabel()
     let afterPositionLabel = UILabel()
     
-    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
+    override init(
+        style: UITableViewCell.CellStyle,
+        reuseIdentifier: String?
+    ) {
         super.init(
           style: style,
           reuseIdentifier: reuseIdentifier
@@ -31,7 +34,6 @@ class HistoryCell: UITableViewCell {
     func setupCellStackView() {
         contentView.addSubview(historyStackView)
         historyStackView.axis = .vertical
-
         historyStackView.addArrangedSubview(titleLabel)
         historyStackView.addArrangedSubview(editTimeLabel)
         historyStackView.addArrangedSubview(beforPositionLabel)

@@ -29,8 +29,8 @@ protocol HistoryViewDelegate: AnyObject {
 }
 
 class HistoryViewController: UIViewController {
-    private var taskLog: [TaskLog] = []
     var delegate: HistoryViewDelegate!
+    private var taskLog: [TaskLog] = []
     private let historyTableView = UITableView()
     private let historySection: [String] = {
         var section: [String] = []
@@ -45,14 +45,15 @@ class HistoryViewController: UIViewController {
         self.taskLog = delegate.loadTaskLog()
         view.backgroundColor = .white
         view.addSubview(historyTableView)
-        setupNavigation()
-        setupConstraint()
+        
         historyTableView.dataSource = self
         historyTableView.delegate = self
         historyTableView.register(
             TaskCell.self,
             forCellReuseIdentifier: "historyCell"
         )
+        setupNavigation()
+        setupConstraint()
     }
 
     private func setupNavigation() {
@@ -66,6 +67,12 @@ class HistoryViewController: UIViewController {
         navigationItem.setRightBarButton(rightButton, animated: false)
     }
     
+    @objc
+    private func dismissHistoryView() {
+        self.dismiss(animated: true)
+    }
+
+    
     private func setupConstraint() {
         let safeArea = view.safeAreaLayoutGuide
         historyTableView.translatesAutoresizingMaskIntoConstraints = false
@@ -76,11 +83,6 @@ class HistoryViewController: UIViewController {
             historyTableView.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor)
         ])
     }
-    
-    @objc
-    private func dismissHistoryView() {
-        self.dismiss(animated: true)
-    }
 }
 
 extension HistoryViewController: UITableViewDataSource {
@@ -88,7 +90,10 @@ extension HistoryViewController: UITableViewDataSource {
         return HistorySection.allCases.count
     }
     
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    func tableView(
+        _ tableView: UITableView,
+        numberOfRowsInSection section: Int
+    ) -> Int {
         let addCount = taskLog.filter{$0.logSection == .add}.count
         let moveCount = taskLog.filter{$0.logSection == .move}.count
         let deleteCount = taskLog.filter{$0.logSection == .delete}.count
@@ -104,8 +109,14 @@ extension HistoryViewController: UITableViewDataSource {
         }
     }
     
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: "historyCell", for: indexPath) as? TaskCell else {
+    func tableView(
+        _ tableView: UITableView,
+        cellForRowAt indexPath: IndexPath
+    ) -> UITableViewCell {
+        guard let cell = tableView.dequeueReusableCell(
+            withIdentifier: "historyCell",
+            for: indexPath
+        ) as? TaskCell else {
             return UITableViewCell()
         }
 //      테스트용
@@ -117,7 +128,10 @@ extension HistoryViewController: UITableViewDataSource {
 }
 
 extension HistoryViewController: UITableViewDelegate {
-    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+    func tableView(
+        _ tableView: UITableView,
+        titleForHeaderInSection section: Int
+    ) -> String? {
         return historySection[section]
     }
 }

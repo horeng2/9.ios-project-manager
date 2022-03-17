@@ -43,7 +43,11 @@ class ToDoViewModel {
             to: afterPosition,
             target: todo.id
         )
-        addTaskLog(todo, in: .move, movedPosition: (berforePosition, afterPosition))
+        addTaskLog(
+            todo,
+            in: .move,
+            movedPosition: (berforePosition, afterPosition)
+        )
         self.reload()
     }
     
@@ -69,19 +73,37 @@ class ToDoViewModel {
         let todoCount = todos.filter{ $0.position == .ToDo}.count
         let doingCount = todos.filter{ $0.position == .Doing}.count
         let doneCount = todos.filter{ $0.position == .Done}.count
-        taskCount.updateValue(todoCount, forKey: .ToDo)
-        taskCount.updateValue(doingCount, forKey: .Doing)
-        taskCount.updateValue(doneCount, forKey: .Done)
-        
+        taskCount.updateValue(
+            todoCount,
+            forKey: .ToDo
+        )
+        taskCount.updateValue(
+            doingCount,
+            forKey: .Doing
+        )
+        taskCount.updateValue(
+            doneCount,
+            forKey: .Done
+        )
         return self.taskCount
     }
     
-    private func addTaskLog(_ todo: ToDoInfomation, in logSection: HistorySection, movedPosition: (ToDoPosition , ToDoPosition)?) {
-        let log = TaskLog(logSection: logSection, title: todo.title, editTime:  Date().timeIntervalSince1970, beforPosition: movedPosition?.0, afterPosition: movedPosition?.1)
+    private func addTaskLog(
+        _ todo: ToDoInfomation,
+        in logSection: HistorySection,
+        movedPosition: (ToDoPosition , ToDoPosition)?
+    ) {
+        let log = TaskLog(
+            logSection: logSection,
+            title: todo.title,
+            editTime:  Date().timeIntervalSince1970,
+            beforPosition: movedPosition?.0,
+            afterPosition: movedPosition?.1
+        )
         taskLog.append(log)
     }
-    
 }
+
 extension ToDoViewModel: HistoryViewDelegate {
     func loadTaskLog() -> [TaskLog] {
         return self.taskLog

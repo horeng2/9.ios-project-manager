@@ -46,14 +46,20 @@ final class TaskTableViewHeader: UITableViewHeaderFooterView {
     }
     
     private func setupHeaderLabels() {
-        spacingView.setContentHuggingPriority(.fittingSizeLevel, for: .horizontal)
-        spacingView.setContentCompressionResistancePriority(.fittingSizeLevel, for: .horizontal)
+        spacingView.setContentHuggingPriority(
+            .fittingSizeLevel,
+            for: .horizontal
+        )
+        spacingView.setContentCompressionResistancePriority(
+            .fittingSizeLevel,
+            for: .horizontal)
 
+        titleLabel.sizeToFit()
         titleLabel.font = .preferredFont(forTextStyle: .largeTitle)
         titleLabel.textAlignment = .center
-        titleLabel.sizeToFit()
         titleLabel.numberOfLines = 0
         
+        countLabel.sizeToFit()
         countLabel.font = .preferredFont(forTextStyle: .callout)
         countLabel.textAlignment = .center
         countLabel.backgroundColor = .black
@@ -61,7 +67,6 @@ final class TaskTableViewHeader: UITableViewHeaderFooterView {
         countLabel.layer.masksToBounds = true
         countLabel.bounds = CGRect(x: 0, y: 0, width: 30, height: 30)
         countLabel.layer.cornerRadius = 30/2
-        countLabel.sizeToFit()
     }
 
     private func setupLayout() {
@@ -69,10 +74,22 @@ final class TaskTableViewHeader: UITableViewHeaderFooterView {
         NSLayoutConstraint.activate([
             headerStackView.topAnchor.constraint(equalTo: self.topAnchor),
             headerStackView.bottomAnchor.constraint(equalTo: self.bottomAnchor),
-            headerStackView.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 10),
-            headerStackView.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: 10),
-            countLabel.topAnchor.constraint(equalTo: headerStackView.topAnchor, constant: 10),
-            countLabel.bottomAnchor.constraint(equalTo: headerStackView.bottomAnchor, constant: -10),
+            headerStackView.leadingAnchor.constraint(
+                equalTo: self.leadingAnchor,
+                constant: 10
+            ),
+            countLabel.topAnchor.constraint(
+                equalTo: headerStackView.topAnchor,
+                constant: 10
+            ),
+            countLabel.bottomAnchor.constraint(
+                equalTo: headerStackView.bottomAnchor,
+                constant: -10
+            ),
+            headerStackView.trailingAnchor.constraint(
+                equalTo: self.trailingAnchor,
+                constant: 10
+            ),
             countLabel.widthAnchor.constraint(equalTo: countLabel.heightAnchor)
         ])
     }
