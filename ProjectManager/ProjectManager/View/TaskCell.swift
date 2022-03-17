@@ -10,7 +10,7 @@ import UIKit
 class TaskCell: UITableViewCell {
     private let cellStackView = UIStackView()
     var position: ToDoPosition? = nil
-    private let titleLabel = UILabel()
+    let titleLabel = UILabel()
     private let discriptionLabel = UILabel()
     private let deadLineLabel = UILabel()
 

@@ -31,11 +31,21 @@ class MainViewController: UIViewController {
     private func setupNavigation() {
         navigationItem.title = "Project Manager"
         let addButtonImage = UIImage(systemName: "plus")
+        let leftButton = UIBarButtonItem(
+            title: "History",
+            style: .done,
+            target: self,
+            action: #selector(showHistoryView)
+        )
         let rightButton = UIBarButtonItem(
             image: addButtonImage,
             style: .done,
             target: self,
             action: #selector(showEditView)
+        )
+        navigationItem.setLeftBarButton(
+            leftButton,
+            animated: false
         )
         navigationItem.setRightBarButton(
             rightButton,
@@ -103,8 +113,17 @@ class MainViewController: UIViewController {
             forCellReuseIdentifier: ViewIdentifier.doneCellId
         )
     }
+    
+    @objc
+    func showHistoryView() {
+        let historyView = HistoryViewController()
+        let historyModal = UINavigationController(rootViewController: historyView)
+        historyModal.modalPresentationStyle = .automatic
+        self.present(historyModal, animated: true)
+    }
 
-    @objc private func showEditView() {
+    @objc
+    private func showEditView() {
         let editView = EditViewController()
         editView.delegate = self
         let modalView = UINavigationController(rootViewController: editView)
