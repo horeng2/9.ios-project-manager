@@ -11,6 +11,10 @@ struct TaskLog {
     let logSection: HistorySection
     let title: String
     let editTime: Double
-    var beforPosition: ToDoPosition?
+    var beforePosition: ToDoPosition?
     var afterPosition: ToDoPosition?
+    
+    var localizedEditTimeString: String {
+        return DateFormatter().localizedDateString(from: editTime)
+    }
 }

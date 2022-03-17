@@ -30,7 +30,9 @@ protocol HistoryViewDelegate: AnyObject {
 
 class HistoryViewController: UIViewController {
     var delegate: HistoryViewDelegate!
-    private var taskLog: [TaskLog] = []
+    private var addTaskLog = [TaskLog]()
+    private var moveTaskLog = [TaskLog]()
+    private var deleteTaskLog = [TaskLog]()
     private let historyTableView = UITableView()
     private let historySection: [String] = {
         var section: [String] = []
@@ -42,18 +44,23 @@ class HistoryViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.taskLog = delegate.loadTaskLog()
-        view.backgroundColor = .white
+        setupTaskLog()
         view.addSubview(historyTableView)
-        
         historyTableView.dataSource = self
         historyTableView.delegate = self
         historyTableView.register(
-            TaskCell.self,
+            HistoryCell.self,
             forCellReuseIdentifier: "historyCell"
         )
         setupNavigation()
         setupConstraint()
+    }
+    
+    private func setupTaskLog() {
+        let taskLog = delegate.loadTaskLog()
+        addTaskLog = taskLog.filter{$0.logSection == .add}
+        moveTaskLog = taskLog.filter{$0.logSection == .move}
+        deleteTaskLog = taskLog.filter{$0.logSection == .delete}
     }
 
     private func setupNavigation() {
@@ -94,16 +101,12 @@ extension HistoryViewController: UITableViewDataSource {
         _ tableView: UITableView,
         numberOfRowsInSection section: Int
     ) -> Int {
-        let addCount = taskLog.filter{$0.logSection == .add}.count
-        let moveCount = taskLog.filter{$0.logSection == .move}.count
-        let deleteCount = taskLog.filter{$0.logSection == .delete}.count
-        
         if section == 0 {
-            return addCount
+            return addTaskLog.count
         } else if section == 1 {
-            return moveCount
+            return moveTaskLog.count
         } else if section == 2 {
-            return deleteCount
+            return deleteTaskLog.count
         } else {
             return 0
         }
@@ -116,14 +119,21 @@ extension HistoryViewController: UITableViewDataSource {
         guard let cell = tableView.dequeueReusableCell(
             withIdentifier: "historyCell",
             for: indexPath
-        ) as? TaskCell else {
+        ) as? HistoryCell else {
             return UITableViewCell()
         }
-//      테스트용
-//        let todo = ToDoInfomation(id: UUID(), title: "fsdfs", discription: "dsfsfsfd", deadline: 2234234234, position: .ToDo)
-//        cell.configure(with: todo)
-//
-        return cell
+        if indexPath.section == 0 {
+            cell.configure(with: addTaskLog[indexPath.row])
+            return cell
+        } else if indexPath.section == 1 {
+            cell.configure(with: moveTaskLog[indexPath.row])
+            return cell
+        } else if indexPath.section == 2 {
+            cell.configure(with: deleteTaskLog[indexPath.row])
+            return cell
+        } else {
+            return HistoryCell()
+        }
     }
 }
 

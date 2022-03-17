@@ -97,7 +97,7 @@ class ToDoViewModel {
             logSection: logSection,
             title: todo.title,
             editTime:  Date().timeIntervalSince1970,
-            beforPosition: movedPosition?.0,
+            beforePosition: movedPosition?.0,
             afterPosition: movedPosition?.1
         )
         taskLog.append(log)

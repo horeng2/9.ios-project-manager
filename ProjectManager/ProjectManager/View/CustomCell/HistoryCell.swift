@@ -7,20 +7,19 @@
 
 import UIKit
 
-class HistoryCell: UITableViewCell {
-    let historyStackView = UIStackView()
-    let titleLabel = UILabel()
-    let editTimeLabel = UILabel()
-    let beforPositionLabel = UILabel()
-    let afterPositionLabel = UILabel()
+final class HistoryCell: UITableViewCell {
+    private let historyStackView = UIStackView()
+    private let titleLabel = UILabel()
+    private let editTimeLabel = UILabel()
+    private let changedPositionLabel = UILabel()
     
     override init(
         style: UITableViewCell.CellStyle,
         reuseIdentifier: String?
     ) {
         super.init(
-          style: style,
-          reuseIdentifier: reuseIdentifier
+            style: style,
+            reuseIdentifier: reuseIdentifier
         )
         setupCellStackView()
         setupCellConstraints()
@@ -31,31 +30,54 @@ class HistoryCell: UITableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func setupCellStackView() {
+    private func setupCellStackView() {
         contentView.addSubview(historyStackView)
-        historyStackView.axis = .vertical
-        historyStackView.addArrangedSubview(titleLabel)
         historyStackView.addArrangedSubview(editTimeLabel)
-        historyStackView.addArrangedSubview(beforPositionLabel)
-        historyStackView.addArrangedSubview(afterPositionLabel)
+        historyStackView.addArrangedSubview(changedPositionLabel)
+        historyStackView.addArrangedSubview(titleLabel)
+        historyStackView.axis = .vertical
+        historyStackView.distribution = .fillEqually
+        historyStackView.spacing = 5
     }
     
-    func setupCellConstraints() {
+    private func setupCellConstraints() {
         historyStackView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            historyStackView.topAnchor.constraint(equalTo: contentView.topAnchor),
-            historyStackView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
-            historyStackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
-            historyStackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor)
+            historyStackView.topAnchor.constraint(
+                equalTo: contentView.topAnchor,
+                constant: 20
+            ),
+            historyStackView.bottomAnchor.constraint(
+                equalTo: contentView.bottomAnchor,
+                constant: -20
+            ),
+            historyStackView.leadingAnchor.constraint(
+                equalTo: contentView.leadingAnchor,
+                constant: 20
+            ),
+            historyStackView.trailingAnchor.constraint(
+                equalTo: contentView.trailingAnchor,
+                constant: -20
+            )
         ])
     }
-
-    func setupCellContent() {
-        titleLabel.font = .preferredFont(forTextStyle: .headline)
+    
+    private func setupCellContent() {
         editTimeLabel.font = .preferredFont(forTextStyle: .headline)
-        beforPositionLabel.font = .preferredFont(forTextStyle: .headline)
-        beforPositionLabel.textColor = .gray
-        afterPositionLabel.font = .preferredFont(forTextStyle: .headline)
-        afterPositionLabel.textColor = .blue
+        changedPositionLabel.font = .preferredFont(forTextStyle: .headline)
+        editTimeLabel.textColor = .systemBlue
+        changedPositionLabel.textColor = .systemRed
+        titleLabel.font = .preferredFont(forTextStyle: .body)
+    }
+    
+    func configure(with taskLog: TaskLog) {
+        editTimeLabel.text = "실행일자: \(taskLog.localizedEditTimeString)"
+        titleLabel.text = taskLog.title
+        guard let beforePosition = taskLog.beforePosition?.name,
+              let afterPosition = taskLog.afterPosition?.name else {
+                  changedPositionLabel.isHidden = true
+                  return
+              }
+        changedPositionLabel.text = beforePosition + " ➤ " + afterPosition
     }
 }
