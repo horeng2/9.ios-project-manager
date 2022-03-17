@@ -51,6 +51,19 @@ class ToDoViewModel {
         self.reload()
     }
     
+    func searchTodo(position: ToDoPosition, indexPath: IndexPath) -> ToDoInfomation {
+        var todo: ToDoInfomation
+        switch position {
+        case .ToDo:
+            todo = todos.filter{$0.position == .ToDo}[indexPath.row]
+        case .Doing:
+            todo = todos.filter{$0.position == .Doing}[indexPath.row]
+        case .Done:
+            todo = todos.filter{$0.position == .Done}[indexPath.row]
+        }
+        return todo
+    }
+    
     func reload() {
         dataManager.fetch { [weak self] todoList in
             guard let self = self else {

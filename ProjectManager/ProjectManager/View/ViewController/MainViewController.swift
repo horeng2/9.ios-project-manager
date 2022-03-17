@@ -252,7 +252,6 @@ extension MainViewController: UITableViewDataSource {
         cellForRowAt indexPath: IndexPath
     ) -> UITableViewCell {
         let cellIdentifier: String
-        
         switch tableView.asTaskTableView().position {
         case .ToDo:
             cellIdentifier = ViewIdentifier.todoCellId
@@ -268,22 +267,19 @@ extension MainViewController: UITableViewDataSource {
             return UITableViewCell()
         }
         setupLongPressRecognizer(cell: cell)
-
-        let todo = todoViewModel.todos[indexPath.row]
+        let todo = todoViewModel.searchTodo(
+            position: tableView.asTaskTableView().position,
+            indexPath: indexPath
+        )
         cell.configure(with: todo)
         return cell
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let todo: ToDoInfomation
-        if tableView == toDoTableView {
-            todo = todoViewModel.todos.filter{ $0.position == .ToDo }[indexPath.row]
-        } else if tableView == doingTableView {
-            todo = todoViewModel.todos.filter { $0.position == .Doing }[indexPath.row]
-        } else {
-            todo = todoViewModel.todos.filter { $0.position == .Done }[indexPath.row]
-        }
-        
+        let todo = todoViewModel.searchTodo(
+            position: tableView.asTaskTableView().position,
+            indexPath: indexPath
+        )
         let editView = EditViewController()
         editView.configure(todo: todo)
         editView.delegate = self
