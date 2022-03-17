@@ -102,14 +102,9 @@
 		489A3CF127CF872F005BABD4 /* View */ = {
 			isa = PBXGroup;
 			children = (
-				C7431F0925F51E1D0094C4CF /* MainViewController.swift */,
-				4831277227DF265E0000DF6D /* TaskTableViewHeader.swift */,
-				4874718B27E08A47005F63E8 /* TaskTableView.swift */,
-				489A3D0427D093A0005BABD4 /* TaskCell.swift */,
-				489A3D0A27D0ADBD005BABD4 /* EditViewController.swift */,
-				48C2DA3F27E1E70D00D2B351 /* HistoryViewController.swift */,
-				48C2DA4127E3440900D2B351 /* HistoryCell.swift */,
-				4874718D27E0A870005F63E8 /* ViewIdentifier.swift */,
+				48C2DA4727E35F6B00D2B351 /* ViewController */,
+				48C2DA4927E35F8400D2B351 /* CustomView */,
+				48C2DA4827E35F7400D2B351 /* CustomCell */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -145,6 +140,35 @@
 				489A3CFC27CFBAA0005BABD4 /* TestDataManager.swift */,
 			);
 			path = Service;
+			sourceTree = "<group>";
+		};
+		48C2DA4727E35F6B00D2B351 /* ViewController */ = {
+			isa = PBXGroup;
+			children = (
+				C7431F0925F51E1D0094C4CF /* MainViewController.swift */,
+				489A3D0A27D0ADBD005BABD4 /* EditViewController.swift */,
+				48C2DA3F27E1E70D00D2B351 /* HistoryViewController.swift */,
+			);
+			path = ViewController;
+			sourceTree = "<group>";
+		};
+		48C2DA4827E35F7400D2B351 /* CustomCell */ = {
+			isa = PBXGroup;
+			children = (
+				489A3D0427D093A0005BABD4 /* TaskCell.swift */,
+				48C2DA4127E3440900D2B351 /* HistoryCell.swift */,
+			);
+			path = CustomCell;
+			sourceTree = "<group>";
+		};
+		48C2DA4927E35F8400D2B351 /* CustomView */ = {
+			isa = PBXGroup;
+			children = (
+				4874718B27E08A47005F63E8 /* TaskTableView.swift */,
+				4831277227DF265E0000DF6D /* TaskTableViewHeader.swift */,
+				4874718D27E0A870005F63E8 /* ViewIdentifier.swift */,
+			);
+			path = CustomView;
 			sourceTree = "<group>";
 		};
 		C7431EF925F51E1D0094C4CF = {
