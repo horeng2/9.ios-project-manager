@@ -117,6 +117,7 @@ class MainViewController: UIViewController {
     @objc
     func showHistoryView() {
         let historyView = HistoryViewController()
+        historyView.delegate = todoViewModel
         let historyModal = UINavigationController(rootViewController: historyView)
         historyModal.modalPresentationStyle = .automatic
         self.present(historyModal, animated: true)

@@ -24,7 +24,13 @@ enum HistorySection: CaseIterable {
     }
 }
 
+protocol HistoryViewDelegate: AnyObject {
+    func loadTaskLog() -> [TaskLog]
+}
+
 class HistoryViewController: UIViewController {
+    private var taskLog: [TaskLog] = []
+    var delegate: HistoryViewDelegate!
     private let historyTableView = UITableView()
     private let historySection: [String] = {
         var section: [String] = []
@@ -36,6 +42,7 @@ class HistoryViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.taskLog = delegate.loadTaskLog()
         view.backgroundColor = .white
         view.addSubview(historyTableView)
         setupNavigation()
@@ -82,7 +89,19 @@ extension HistoryViewController: UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 1
+        let addCount = taskLog.filter{$0.logSection == .add}.count
+        let moveCount = taskLog.filter{$0.logSection == .move}.count
+        let deleteCount = taskLog.filter{$0.logSection == .delete}.count
+        
+        if section == 0 {
+            return addCount
+        } else if section == 1 {
+            return moveCount
+        } else if section == 2 {
+            return deleteCount
+        } else {
+            return 0
+        }
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
