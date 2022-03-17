@@ -48,7 +48,6 @@ class HistoryViewController: UIViewController {
         )
     }
 
-    
     private func setupNavigation() {
         navigationItem.title = "History"
         let rightButton = UIBarButtonItem(
@@ -90,9 +89,10 @@ extension HistoryViewController: UITableViewDataSource {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: "historyCell", for: indexPath) as? TaskCell else {
             return UITableViewCell()
         }
-        let todo = ToDoInfomation(id: UUID(), title: "fsdfs", discription: "dsfsfsfd", deadline: 2234234234, position: .ToDo)
-        cell.configure(with: todo)
-        
+//      테스트용
+//        let todo = ToDoInfomation(id: UUID(), title: "fsdfs", discription: "dsfsfsfd", deadline: 2234234234, position: .ToDo)
+//        cell.configure(with: todo)
+//
         return cell
     }
 }
