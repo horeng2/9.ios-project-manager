@@ -26,11 +26,4 @@ class TestDataManager {
             onComleted(todoList)
         }
     }
-    
-    func changePosition(
-        to position: ToDoPosition,
-        target id: UUID
-    ) {
-        todoRepository.changePosition(to: position, target: id)
-    }
 }

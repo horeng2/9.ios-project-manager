@@ -38,11 +38,10 @@ class ToDoViewModel {
         currentIndexPath: Int
     ) {
         let beforePositionList = todos.filter{ $0.position == berforePosition }
-        let todo = beforePositionList[currentIndexPath]
-        dataManager.changePosition(
-            to: afterPosition,
-            target: todo.id
-        )
+        var todo = beforePositionList[currentIndexPath]
+        todo.position = afterPosition
+        dataManager.save(with: todo)
+        
         addTaskLog(
             todo,
             in: .move,

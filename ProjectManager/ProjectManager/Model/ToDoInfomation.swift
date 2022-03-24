@@ -17,3 +17,17 @@ struct ToDoInfomation {
         return DateFormatter().localizedDateString(from: deadline)
     }
 }
+
+extension ToDoInfomation {
+    func data() -> [String:Any] {
+        let data: [String:Any] = [
+            "id": "\(self.id)",
+            "title": self.title,
+            "discription": self.discription,
+            "deadline": self.deadline,
+            "position": self.position.name,
+            "localizedDateString": self.localizedDateString
+        ]
+        return data
+    }
+}
